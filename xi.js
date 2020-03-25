@@ -23,13 +23,10 @@ anistep=1
 ani=0
 piece_size=(1000/12)-10
 dot_size=piece_size/5
-homerow_b=["ba","bk","bs","bs","bk","ba"]
-homerow_w=["wa","wk","ws","ws","wk","wa"]
 
-board=new Array(4);
-for (var i=0; i<4; i++) {
-  board[i] = new Array(6);
-}
+//
+
+board=[]
 
 //Auxiliary functions
 
@@ -276,6 +273,7 @@ function main_menu_listener(e){
   }
   if (menu_option==1) 
   {
+    initialize_board();
     ani=setInterval(main_loop, interval, false);
   }
   if (menu_option==2)
@@ -335,8 +333,8 @@ function draw_grid(alpha=1)
   for (cx=1000/6; cx<1000-(1000/6); cx+=1000/6){
     for (cy=1000/6; cy<1000-(1000/6); cy+=1000/6){
       if(grid_type==0){
-        draw_line(cx-5,cy,cx+5,cy, "white", alpha);
-        draw_line(cx,cy-5,cx,cy+5, "white", alpha);
+        draw_line(cx-3,cy,cx+3,cy, "white", alpha);
+        draw_line(cx,cy-3,cx,cy+3, "white", alpha);
       }
       if(grid_type==1)
       {
@@ -349,7 +347,25 @@ function draw_grid(alpha=1)
 function draw_game()
 {
   draw_grid();
-  //Process pieces
+  for (i=0; i<6; i++)
+  {
+    for (j=0; j<6; j++)
+    {
+      piece=board[j][i];
+      if (piece!="")
+      {
+        c=piece[0];
+        p=piece[1];
+        switch(p)
+        {
+          case "a": draw_aon(i,j,c); break;
+          case "k": draw_khoyor(i,j,c);break;
+          case "s": draw_ska(i,j,c); break;
+          case "3": draw_san(i,j,c); break;
+        }
+      }
+    }
+  }
 }
 
 function draw_aon(x,y,colour,alpha=1)
@@ -427,6 +443,16 @@ function draw_san(x,y,colour,alpha=1)
 }
 
 //Game logic
+
+function initialize_board()
+{
+  board[0]=["wa","wk","ws","ws","wk","wa"];
+  board[5]=["ba","bk","bs","bs","bk","ba"];
+  for (i=1; i<5; i++)
+  {
+    board[i]=Array(6).fill("")
+  }
+}
 
 function check_game()
 {
