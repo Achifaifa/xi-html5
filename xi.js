@@ -166,15 +166,15 @@ function credits()
   ctx.fillText(version,210,160);
   ctx.font="bold 50px quizma-light";
   ctx.fillText("Code",150,260);
-  ctx.fillText("Stuff",150,360);
-  ctx.fillText("Stuff2",150,460);
+  // ctx.fillText("Stuff",150,360);
+  // ctx.fillText("Stuff2",150,460);
   ctx.font="45px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(210-mouse_pos.y))+")";
-  ctx.fillText("bla",350,260);
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(310-mouse_pos.y))+")";
-  ctx.fillText("bla",350,360);
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(410-mouse_pos.y))+")";
-  ctx.fillText("bla",350,460);
+  ctx.fillText("Achifaifa",350,260);
+  // ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(310-mouse_pos.y))+")";
+  // ctx.fillText("bla",350,360);
+  // ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(410-mouse_pos.y))+")";
+  // ctx.fillText("bla",350,460);
   ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(710-mouse_pos.y))+")";
   ctx.fillText("Back",150,760);
 
@@ -279,7 +279,7 @@ function update_click_coords()
 
 function main_menu_listener()
 {  
-  valid_options=[1,2,3]
+  valid_options=[1,3]
   if (valid_options.includes(menu_option))
   {
     ctx.canvas.removeEventListener("click", main_menu_listener, false);
@@ -292,12 +292,12 @@ function main_menu_listener()
     ctx.canvas.addEventListener("click", main_game_listener, false);
     ani=setInterval(main_loop, interval, false);
   }
-  if (menu_option==2)
-  {
-    ani=setInterval(settings, interval, 1);
-    ctx.canvas.addEventListener("click", settings_menu_listener, false);
+  // if (menu_option==2)
+  // {
+  //   ani=setInterval(settings, interval, 1);
+  //   ctx.canvas.addEventListener("click", settings_menu_listener, false);
 
-  }
+  // }
   if (menu_option==3)
   {
     ani=setInterval(credits, interval, 1);
@@ -602,9 +602,9 @@ function spawn(coords, c)
 
 //---
 
-// ctx.canvas.addEventListener("click", skip_to_menu, false);
-// ani=setInterval(logo_animation, interval, 1);
+ctx.canvas.addEventListener("click", skip_to_menu, false);
+ani=setInterval(logo_animation, interval, 1);
 
-initialize_board()
-ctx.canvas.addEventListener("click", main_game_listener, false);
-ani=setInterval(main_loop, interval, false);
+// initialize_board()
+// ctx.canvas.addEventListener("click", main_game_listener, false);
+// ani=setInterval(main_loop, interval, false);
