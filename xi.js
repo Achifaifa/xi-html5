@@ -37,9 +37,9 @@ turn=0
 
 //Mobile detection
 
-  try{document.createEvent("TouchEvent"); mobile=1;}
-  catch(e){mobile=0}
-  console.log(mobile)
+try{document.createEvent("TouchEvent"); mobile=1;}
+catch(e){mobile=0}
+console.log(mobile)
 
 //Adjusting css so canvas scales to fit window
 
@@ -427,7 +427,7 @@ function draw_game()
           case "a": draw_aon(i,j,c); break; 
           case "k": draw_khoyor(i,j,c); break;
           case "s": draw_ska(i,j,c); break;
-          case "3": draw_san(i,j,c); break;
+          case "z": draw_san(i,j,c); break;
         }
       }
     }
@@ -509,15 +509,15 @@ function draw_san(x,y,colour,alpha=1)
   pxx=coord_to_pixel(x);
   pxy=coord_to_pixel(y);
   ctx.lineWidth=dot_size*3;
-  draw_line(pxx-40,pxy+40,pxx+40,pxy+40, alpha);
-  draw_line(pxx-40,pxy+40,pxx,pxy-15, alpha);
-  draw_line(pxx+40,pxy+40,pxx,pxy-15, alpha);
+
+  draw_line(pxx-40,pxy+40,pxx+40,pxy+40, "white", alpha);
+  draw_line(pxx-40,pxy+40,pxx,pxy-15, "white", alpha);
+  draw_line(pxx+40,pxy+40,pxx,pxy-15, "white", alpha);
   if (colour=="b")
   {
-    ctx.strokeStyle="black";
-    draw_line(pxx-39,pxy+39,pxx+39,pxy+39, alpha);
-    draw_line(pxx-39,pxy+39,pxx,pxy-14, alpha);
-    draw_line(pxx+39,pxy+39,pxx,pxy-14, alpha);
+    draw_line(pxx-39,pxy+39,pxx+39,pxy+39, "black", alpha);
+    draw_line(pxx-39,pxy+39,pxx,pxy-14, "black", alpha);
+    draw_line(pxx+39,pxy+39,pxx,pxy-14, "black", alpha);
   }
   ctx.lineWidth=1
 }
@@ -576,7 +576,7 @@ function possible_moves(coords)
         {x: c.x-1, y:c.y+1}
       ]
     break;
-    case "3":
+    case "z":
       if (pc=="w")
       {
         valid=[{x:c.x, y:c.y+1}]
@@ -617,7 +617,7 @@ function move(mov)
 
 function spawn(coords, c)
 {
-  board[coords.y][coords.x]=c+"3"
+  board[coords.y][coords.x]=c+"z"
 }
 
 //---
