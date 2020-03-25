@@ -35,6 +35,12 @@ selected={x:-1, y:-1}
 board=[]
 turn=0
 
+//Mobile detection
+
+  try{document.createEvent("TouchEvent"); mobile=1;}
+  catch(e){mobile=0}
+  console.log(mobile)
+
 //Auxiliary functions
 
 function draw_line(x1,y1,x2,y2,colour="white",alpha=1)
@@ -92,6 +98,12 @@ function coord_to_pixel(c)
   return (1000/12)*(1+(c*2))
 }
 
+function menu_alpha(y)
+{
+  if (mobile==0){return Math.abs(y-mouse_pos.y)}
+  else {return 50}
+}
+
 //Intro and menus
 
 function logo_animation(i)
@@ -135,11 +147,11 @@ function menu()
   ctx.font="bold 20px quizma-light";
   ctx.fillText(version,210,160);
   ctx.font="bold 50px quizma-light";
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(210-mouse_pos.y))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(50*malpha/menu_alpha(210))+")";
   ctx.fillText("New game",150,260);
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(310-mouse_pos.y))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(50*malpha/menu_alpha(310))+")";
   ctx.fillText("Settings",150,360);
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(410-mouse_pos.y))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(50*malpha/menu_alpha(410))+")";
   ctx.fillText("Credits",150,460);
   if (anistep<50){anistep++;}
   else if (anistep==50){anistep++; ctx.canvas.addEventListener("click", main_menu_listener, false)}
@@ -169,13 +181,13 @@ function credits()
   // ctx.fillText("Stuff",150,360);
   // ctx.fillText("Stuff2",150,460);
   ctx.font="45px quizma-light";
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(210-mouse_pos.y))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(210))+")";
   ctx.fillText("Achifaifa",350,260);
   // ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(310-mouse_pos.y))+")";
   // ctx.fillText("bla",350,360);
   // ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(410-mouse_pos.y))+")";
   // ctx.fillText("bla",350,460);
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(710-mouse_pos.y))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(710))+")";
   ctx.fillText("Back",150,760);
 
   if (anistep<50){anistep++}
@@ -200,11 +212,11 @@ function settings()
   ctx.font="bold 20px quizma-light";
   ctx.fillText(version,210,160);
   ctx.font="bold 50px quizma-light";
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(210-mouse_pos.y))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(210))+")";
   ctx.fillText("Setting1",150,260);
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(310-mouse_pos.y))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(310))+")";
   ctx.fillText("Setting2",150,360);
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(410-mouse_pos.y))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(410))+")";
   ctx.fillText("Setting3",150,460);
   ctx.font="45px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+(anistep/50)+")";
