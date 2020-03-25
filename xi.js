@@ -25,15 +25,15 @@ dot_size=piece_size/5
 //
 
 mouse_pos={x:0,y:0}
-clicked_coords={x:-1, y:-1}
+click_coords={x:-1, y:-1}
+prev={x:-1, y:-1}
 menu_option=-1
-
+selected={x:-1, y:-1}
 
 //
 
 board=[]
 turn=0
-selected={x:-1, y:-1}
 
 //Auxiliary functions
 
@@ -269,7 +269,7 @@ function update_menu_option(e)
   else {menu_option=-1}
 }
 
-function update_click_coords(e)
+function update_click_coords()
 {
   click_coords={
     x: Math.ceil(pixel_to_coord(mouse_pos.x)),
@@ -277,7 +277,7 @@ function update_click_coords(e)
   }
 }
 
-function main_menu_listener(e)
+function main_menu_listener()
 {  
   valid_options=[1,2,3]
   if (valid_options.includes(menu_option))
@@ -305,7 +305,7 @@ function main_menu_listener(e)
   }
 }
 
-function settings_menu_listener(e)
+function settings_menu_listener()
 {
   valid_options=[7]
   if (valid_options.includes(menu_option))
@@ -320,7 +320,7 @@ function settings_menu_listener(e)
   } 
 }
 
-function credits_menu_listener(e)
+function credits_menu_listener()
 {
   valid_options=[7]
   if (valid_options.includes(menu_option))
@@ -335,33 +335,30 @@ function credits_menu_listener(e)
   }
 }
 
-function main_game_listener(e)
+function main_game_listener()
 {
+
   update_click_coords();
   clicked_piece=board[click_coords.y][click_coords.x]
 
-  if (selected.x==-1)
+  if (prev.x!=-1 && possible_moves(prev).filter(e=>e.x==click_coords.x && e.y==click_coords.y).length>0)
   {
-    if(clicked_piece!="")
-    {
-      selected.x=click_coords.x;
-      selected.y=click_coords.y;
-    }
+    move([prev,click_coords])
+    selected={x:-1, y:-1}
+    turn^=1
   }
+  else if ((clicked_piece[0]=="w" && turn==1) || (clicked_piece[0]=="b" && turn==0))
+  {
+    prev.x=click_coords.x;
+    prev.y=click_coords.y;
+    selected.x=click_coords.x;
+    selected.y=click_coords.y;
+  }  
   else
   {
-    if(clicked_piece=="")
-    {
-      selected.x=-1;
-      selected.y=-1;
-    }
-    else
-    {
-      selected.x=click_coords.x;
-      selected.y=click_coords.y;
-    }
+    selected={x:-1, y:-1}
+    prev={x:-1, y:-1}
   }
-  console.log(selected)
 }
 
 ctx.canvas.addEventListener("click", update_menu_option);
@@ -412,7 +409,24 @@ function draw_game()
   }
   if(selected.x!=-1)
   {
-    draw_circle(coord_to_pixel(selected.x),coord_to_pixel(selected.y),1000/12);
+    draw_circle(coord_to_pixel(selected.x),coord_to_pixel(selected.y),1000/12.75);
+    moves=possible_moves(selected)
+    for (i=0; i<moves.length; i++)
+    {
+      m=moves[i]
+      switch(board[m.y][m.x])
+      {
+        case "":
+          draw_circle(coord_to_pixel(m.x),coord_to_pixel(m.y),1000/20);
+        break;
+        case "w":
+          draw_circle(coord_to_pixel(m.x),coord_to_pixel(m.y),1000/20,"black");
+        break;
+        case "b":
+          draw_circle(coord_to_pixel(m.x),coord_to_pixel(m.y),1000/20);
+        break;
+      }
+    }
   }
 }
 
@@ -507,9 +521,60 @@ function check_game()
   1==1 
 }
 
-function possible_moves(colour)
+function possible_moves(c)
 {
-  1==1
+  piece=board[c.y][c.x]
+  pc=piece[0]
+  pt=piece[1]
+  valid=[]
+
+  switch(pt)
+  {
+    case "a":
+      valid=
+      [
+        {x: c.x+1, y:c.y},
+        {x: c.x-1, y:c.y},
+        {x: c.x, y:c.y+1},
+        {x: c.x, y:c.y-1}
+      ]
+    break;
+    case "k":
+      valid=
+      [
+        {x: c.x+2, y:c.y},
+        {x: c.x-2, y:c.y},
+        {x: c.x, y:c.y+2},
+        {x: c.x, y:c.y-2}
+      ]
+    break;
+    case "s":
+      valid=
+      [
+        {x: c.x+1, y:c.y+1},
+        {x: c.x-1, y:c.y-1},
+        {x: c.x+1, y:c.y-1},
+        {x: c.x-1, y:c.y+1}
+      ]
+    break;
+    case "3":
+      if (pc="w"){valid=[{x:c.x, y:c.y+1}]}
+      else{valid=[{x:c.x, y:c.y-1}]}
+    break;
+  }
+
+  ret=[];
+  for (i=0; i<valid.length; i++){
+    cu=valid[i];
+    if (cu.x>=0 && cu.x<6 && cu.y>=0 && cu.y<6)
+    {
+      if(board[cu.y][cu.x]=="" || board[cu.y][cu.x][0]!=pc)
+      {
+        ret.push(cu);
+      }
+    }
+  }
+  return ret
 }
 
 function homerow(colour)
@@ -519,7 +584,9 @@ function homerow(colour)
 
 function move(mov)
 {
-  1==1
+  piece=board[mov[0].y][mov[0].x]
+  board[mov[0].y][mov[0].x]=""
+  board[mov[1].y][mov[1].x]=piece
 }
 
 function spawn(file, c)
