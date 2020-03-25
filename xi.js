@@ -414,18 +414,10 @@ function draw_game()
     for (i=0; i<moves.length; i++)
     {
       m=moves[i]
-      switch(board[m.y][m.x])
-      {
-        case "":
-          draw_circle(coord_to_pixel(m.x),coord_to_pixel(m.y),1000/20);
-        break;
-        case "w":
-          draw_circle(coord_to_pixel(m.x),coord_to_pixel(m.y),1000/20,"black");
-        break;
-        case "b":
-          draw_circle(coord_to_pixel(m.x),coord_to_pixel(m.y),1000/20);
-        break;
-      }
+      sw=board[m.y][m.x]
+      if (sw==""){draw_circle(coord_to_pixel(m.x),coord_to_pixel(m.y),1000/20);}
+      else if (sw[0]=="w"){draw_circle(coord_to_pixel(m.x),coord_to_pixel(m.y),1000/20,"black");}
+      else if (sw[0]=="b"){draw_circle(coord_to_pixel(m.x),coord_to_pixel(m.y),1000/20);}
     }
   }
 }
@@ -596,9 +588,9 @@ function spawn(file, c)
 
 //---
 
-// ctx.canvas.addEventListener("click", skip_to_menu, false);
-// ani=setInterval(logo_animation, interval, 1);
+ctx.canvas.addEventListener("click", skip_to_menu, false);
+ani=setInterval(logo_animation, interval, 1);
 
-initialize_board()
-ctx.canvas.addEventListener("click", main_game_listener, false);
-ani=setInterval(main_loop, interval, false);
+// initialize_board()
+// ctx.canvas.addEventListener("click", main_game_listener, false);
+// ani=setInterval(main_loop, interval, false);
