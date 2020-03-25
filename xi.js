@@ -39,7 +39,6 @@ turn=0
 
 try{document.createEvent("TouchEvent"); mobile=1;}
 catch(e){mobile=0}
-console.log(mobile)
 
 //Adjusting css so canvas scales to fit window
 
@@ -240,33 +239,15 @@ function main_loop()
   //initial fade, done manually
   ctx.clearRect(0,0,1000,1000);
 
-  if (anistep<100)
+  draw_grid();
+  draw_game();
+  if (anistep<50)
   {
-    anistep++; 
-    draw_grid(anistep/50);
-    if (anistep>50)
-    {
-      piecealpha=(anistep-50)/50;
-      draw_aon(0,0,"w",piecealpha);
-      draw_aon(5,0,"w",piecealpha);
-      draw_aon(0,5,"b",piecealpha);
-      draw_aon(5,5,"b",piecealpha);
-      draw_khoyor(1,0,"w",piecealpha);
-      draw_khoyor(4,0,"w",piecealpha);
-      draw_khoyor(1,5,"b",piecealpha);
-      draw_khoyor(4,5,"b",piecealpha);
-      draw_ska(2,0,"w",piecealpha);
-      draw_ska(3,0,"w",piecealpha);
-      draw_ska(2,5,"b",piecealpha);
-      draw_ska(3,5,"b",piecealpha);
-    }
+    ca=-(1.1-(50/anistep))
+    ctx.fillStyle="rgba(0,0,0,"+ca+")"
+    ctx.fillRect(0,0,1000,1000)
   }
-
-  //Actual game loop
-  else
-  {
-    draw_game();
-  }
+  anistep++; 
 }
 
 //Listeners
@@ -393,14 +374,14 @@ ctx.canvas.addEventListener('mousemove', function(e) {
 
 //Drawing functions
 
-function draw_grid(alpha=1)
+function draw_grid()
 {
   ctx.lineWidth=1;
   for (cx=1000/6; cx<1000-(1000/6); cx+=1000/6){
     for (cy=1000/6; cy<1000-(1000/6); cy+=1000/6){
       if(grid_type==0){
-        draw_line(cx-3,cy,cx+3,cy, "white", alpha);
-        draw_line(cx,cy-3,cx,cy+3, "white", alpha);
+        draw_line(cx-3,cy,cx+3,cy, "white");
+        draw_line(cx,cy-3,cx,cy+3, "white");
       }
       if(grid_type==1)
       {
@@ -447,24 +428,24 @@ function draw_game()
   }
 }
 
-function draw_aon(x,y,colour,alpha=1)
+function draw_aon(x,y,colour)
 {
   ctx.lineWidth=1;
   pxx=coord_to_pixel(x);
   pxy=coord_to_pixel(y);
   if (colour=="w")
   {
-    fill_circle(pxx,pxy, piece_size, "white", alpha);
-    fill_circle(pxx,pxy, dot_size, "black", alpha);
+    fill_circle(pxx,pxy, piece_size, "white");
+    fill_circle(pxx,pxy, dot_size, "black");
   }
   else if (colour=="b")
   {
-    draw_circle(pxx,pxy, piece_size, "white", alpha);
-    fill_circle(pxx,pxy, dot_size, "white", alpha);
+    draw_circle(pxx,pxy, piece_size, "white");
+    fill_circle(pxx,pxy, dot_size, "white");
   }
 }
 
-function draw_khoyor(x,y,colour,alpha=1)
+function draw_khoyor(x,y,colour)
 {
   ddiff=dot_size*1.25;
   ctx.lineWidth=1;
@@ -472,19 +453,19 @@ function draw_khoyor(x,y,colour,alpha=1)
   pxy=coord_to_pixel(y);
   if (colour=="w")
   {
-    fill_circle(pxx,pxy, piece_size, "white", alpha);
-    fill_circle(pxx-ddiff,pxy-ddiff, dot_size, "black", alpha);
-    fill_circle(pxx+ddiff,pxy+ddiff, dot_size, "black", alpha);  
+    fill_circle(pxx,pxy, piece_size, "white");
+    fill_circle(pxx-ddiff,pxy-ddiff, dot_size, "black");
+    fill_circle(pxx+ddiff,pxy+ddiff, dot_size, "black");  
   }
   else if (colour=="b")
   {
-    draw_circle(pxx,pxy, piece_size, "white", alpha);
-    fill_circle(pxx-ddiff,pxy-ddiff, dot_size, "white", alpha);
-    fill_circle(pxx+ddiff,pxy+ddiff, dot_size, "white", alpha); 
+    draw_circle(pxx,pxy, piece_size, "white");
+    fill_circle(pxx-ddiff,pxy-ddiff, dot_size, "white");
+    fill_circle(pxx+ddiff,pxy+ddiff, dot_size, "white"); 
   }
 }
 
-function draw_ska(x,y,colour,alpha=1)
+function draw_ska(x,y,colour)
 {
   ctx.lineWidth=1;
   pxx=coord_to_pixel(x);
@@ -492,32 +473,32 @@ function draw_ska(x,y,colour,alpha=1)
   ddiff=dot_size*1.5;
   if (colour=="w")
   {
-    fill_circle(pxx,pxy, piece_size, "white", alpha);
+    fill_circle(pxx,pxy, piece_size, "white");
     ctx.lineWidth=dot_size*2;
-    draw_line(pxx-ddiff,pxy-ddiff,pxx+ddiff,pxy+ddiff, "black", alpha);
+    draw_line(pxx-ddiff,pxy-ddiff,pxx+ddiff,pxy+ddiff, "black");
   }
   else if (colour=="b")
   {
-    draw_circle(pxx,pxy, piece_size, "white", alpha);
+    draw_circle(pxx,pxy, piece_size, "white");
     ctx.lineWidth=dot_size*2;
-    draw_line(pxx-ddiff,pxy-ddiff,pxx+ddiff,pxy+ddiff, "white", alpha);
+    draw_line(pxx-ddiff,pxy-ddiff,pxx+ddiff,pxy+ddiff, "white");
   }
 }
 
-function draw_san(x,y,colour,alpha=1)
+function draw_san(x,y,colour)
 {
   pxx=coord_to_pixel(x);
   pxy=coord_to_pixel(y);
   ctx.lineWidth=dot_size*3;
 
-  draw_line(pxx-40,pxy+40,pxx+40,pxy+40, "white", alpha);
-  draw_line(pxx-40,pxy+40,pxx,pxy-15, "white", alpha);
-  draw_line(pxx+40,pxy+40,pxx,pxy-15, "white", alpha);
+  draw_line(pxx-40,pxy+40,pxx+40,pxy+40, "white");
+  draw_line(pxx-40,pxy+40,pxx,pxy-15, "white");
+  draw_line(pxx+40,pxy+40,pxx,pxy-15, "white");
   if (colour=="b")
   {
-    draw_line(pxx-39,pxy+39,pxx+39,pxy+39, "black", alpha);
-    draw_line(pxx-39,pxy+39,pxx,pxy-14, "black", alpha);
-    draw_line(pxx+39,pxy+39,pxx,pxy-14, "black", alpha);
+    draw_line(pxx-39,pxy+39,pxx+39,pxy+39, "black");
+    draw_line(pxx-39,pxy+39,pxx,pxy-14, "black");
+    draw_line(pxx+39,pxy+39,pxx,pxy-14, "black");
   }
   ctx.lineWidth=1
 }
