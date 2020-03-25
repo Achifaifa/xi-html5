@@ -1,9 +1,9 @@
-var c=document.getElementById("xi");
-c.style.background="#000";
-var ctx=c.getContext("2d");
-ctx.canvas.width=1000;
-ctx.canvas.height=1000;
-ctx.lineCap = "round";
+var c=document.getElementById("xi")
+c.style.background="#000"
+var ctx=c.getContext("2d")
+ctx.canvas.width=1000
+ctx.canvas.height=1000
+ctx.lineCap="round"
 
 //
 
@@ -13,8 +13,6 @@ version="0,1"
 
 fps=30
 interval=1000/fps
-mouse_pos={x:0,y:0}
-menu_option=-1
 grid_type=0
 
 //
@@ -26,7 +24,16 @@ dot_size=piece_size/5
 
 //
 
+mouse_pos={x:0,y:0}
+clicked_coords={x:-1, y:-1}
+menu_option=-1
+
+
+//
+
 board=[]
+turn=0
+selected={x:-1, y:-1}
 
 //Auxiliary functions
 
@@ -67,15 +74,17 @@ function fill_circle(x,y,size,colour="white",alpha=1)
 
 function mouse_position(c, e) {
   var rect=c.getBoundingClientRect();
+  scalex=ctx.canvas.width/rect.width;  
+  scaley=ctx.canvas.height/rect.height;  
   return {
-    x: e.clientX-rect.left,
-    y: e.clientY-rect.top
+    x: (e.clientX-rect.left)*scalex,
+    y: (e.clientY-rect.top)*scaley
   };
 }
 
 function pixel_to_coord(px)
 {
-  return Math.floor(px/(1000/6))
+  return Math.ceil(px/(1000/6))-1
 }
 
 function coord_to_pixel(c)
@@ -170,7 +179,6 @@ function credits()
   ctx.fillText("Back",150,760);
 
   if (anistep<50){anistep++}
- 
 }
 
 function settings()
@@ -205,7 +213,6 @@ function settings()
   ctx.fillText("bla",350,460);
   ctx.fillStyle="rgba(255,255,255,"+(anistep/50)+")";  ctx.fillText("Back",150,760);
   if (anistep<50){anistep++;}
-  
 }
 
 function main_loop()
@@ -244,26 +251,34 @@ function main_loop()
 
 //Listeners
 
-function skip_to_menu(e){
+function skip_to_menu(e)
+{
   clearTimeout(ani);
   anistep=1
   ani=setInterval(menu, interval, 1)
   ctx.canvas.removeEventListener("click", skip_to_menu);
 }
 
-function update_menu_option(e){
-
+function update_menu_option(e)
+{
   if(mouse_pos.y>175 && mouse_pos.y<270){menu_option=1;}
   else if(mouse_pos.y>270 && mouse_pos.y<370){menu_option=2;}
   else if(mouse_pos.y>370 && mouse_pos.y<470){menu_option=3;}
   else if(mouse_pos.y>470 && mouse_pos.y<570){menu_option=4;}
-
   else if(mouse_pos.y>670 && mouse_pos.y<770){menu_option=7;}
   else {menu_option=-1}
 }
 
-function main_menu_listener(e){
-  
+function update_click_coords(e)
+{
+  click_coords={
+    x: Math.ceil(pixel_to_coord(mouse_pos.x)),
+    y: Math.ceil(pixel_to_coord(mouse_pos.y))
+  }
+}
+
+function main_menu_listener(e)
+{  
   valid_options=[1,2,3]
   if (valid_options.includes(menu_option))
   {
@@ -274,6 +289,7 @@ function main_menu_listener(e){
   if (menu_option==1) 
   {
     initialize_board();
+    ctx.canvas.addEventListener("click", main_game_listener, false);
     ani=setInterval(main_loop, interval, false);
   }
   if (menu_option==2)
@@ -319,7 +335,35 @@ function credits_menu_listener(e)
   }
 }
 
-ctx.canvas.addEventListener("click", skip_to_menu, false);
+function main_game_listener(e)
+{
+  update_click_coords();
+  clicked_piece=board[click_coords.y][click_coords.x]
+
+  if (selected.x==-1)
+  {
+    if(clicked_piece!="")
+    {
+      selected.x=click_coords.x;
+      selected.y=click_coords.y;
+    }
+  }
+  else
+  {
+    if(clicked_piece=="")
+    {
+      selected.x=-1;
+      selected.y=-1;
+    }
+    else
+    {
+      selected.x=click_coords.x;
+      selected.y=click_coords.y;
+    }
+  }
+  console.log(selected)
+}
+
 ctx.canvas.addEventListener("click", update_menu_option);
 ctx.canvas.addEventListener('mousemove', function(e) {
   mouse_pos = mouse_position(ctx.canvas, e);
@@ -358,13 +402,17 @@ function draw_game()
         p=piece[1];
         switch(p)
         {
-          case "a": draw_aon(i,j,c); break;
-          case "k": draw_khoyor(i,j,c);break;
+          case "a": draw_aon(i,j,c); break; 
+          case "k": draw_khoyor(i,j,c); break;
           case "s": draw_ska(i,j,c); break;
           case "3": draw_san(i,j,c); break;
         }
       }
     }
+  }
+  if(selected.x!=-1)
+  {
+    draw_circle(coord_to_pixel(selected.x),coord_to_pixel(selected.y),1000/12);
   }
 }
 
@@ -479,10 +527,11 @@ function spawn(file, c)
   1==1
 }
 
-//TO-DO side menu (drag to deploy)
-
-//
-
 //---
 
-ani=setInterval(logo_animation, interval, 1);
+// ctx.canvas.addEventListener("click", skip_to_menu, false);
+// ani=setInterval(logo_animation, interval, 1);
+
+initialize_board()
+ctx.canvas.addEventListener("click", main_game_listener, false);
+ani=setInterval(main_loop, interval, false);
