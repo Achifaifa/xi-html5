@@ -121,7 +121,7 @@ function logo_animation(i)
   ctx.fillStyle="rgba(255,255,255,"+(anistep/80)+")";
   ctx.textAlign="center"
   ctx.fillText("愛智重工",500,500);
-  ctx.font="20px quizma-thin";
+  ctx.font="20px quizma-light";
   ctx.fillText("Achi Heavy Industries",500,520)
   if (anistep==80){clearTimeout(ani);ani=setInterval(logo_animation, interval, 0)}
   if(i==1){anistep++;}else{anistep--;}
@@ -131,7 +131,7 @@ function logo_animation(i)
 function title_animation(i)
 {
   ctx.clearRect(0,0,1000,1000)
-  ctx.font="bold 120px quizma-thin";
+  ctx.font="120px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+(anistep/80)+")";
   ctx.textAlign="center"
   ctx.fillText("Xi",500,500);
@@ -150,9 +150,9 @@ function menu()
   ctx.fillStyle="rgba(255,255,255,"+malpha+")";
   ctx.textAlign="start";
 
-  ctx.font="bold 120px quizma-light";
+  ctx.font="120px quizma-light";
   ctx.fillText("Xi",125,160);
-  ctx.font="bold 20px quizma-light";
+  ctx.font="20px quizma-light";
   ctx.fillText(version,210,160);
   ctx.font="bold 50px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+(50*malpha/menu_alpha(210))+")";
@@ -178,11 +178,11 @@ function credits()
   ctx.fillStyle="rgba(255,255,255,"+calpha+")";
   ctx.textAlign="start";
 
-  ctx.font="bold 120px quizma-light";
+  ctx.font="120px quizma-light";
   ctx.fillText("Xi",125,160);
-  ctx.font="bold 75px quizma-light";
+  ctx.font="75px quizma-light";
   ctx.fillText("Credits",300,145);
-  ctx.font="bold 20px quizma-light";
+  ctx.font="20px quizma-light";
   ctx.fillText(version,210,160);
   ctx.font="bold 50px quizma-light";
   ctx.fillText("Code",150,260);
@@ -213,11 +213,11 @@ function settings()
   ctx.fillStyle="rgba(255,255,255,"+salpha+")";
   ctx.textAlign="start";
 
-  ctx.font="bold 120px quizma-light";
+  ctx.font="120px quizma-light";
   ctx.fillText("Xi",125,160);
-  ctx.font="bold 75px quizma-light";
+  ctx.font="75px quizma-light";
   ctx.fillText("Settings",300,145);
-  ctx.font="bold 20px quizma-light";
+  ctx.font="20px quizma-light";
   ctx.fillText(version,210,160);
   ctx.font="bold 50px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(210))+")";
