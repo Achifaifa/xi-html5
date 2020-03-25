@@ -309,7 +309,8 @@ function update_menu_option(e){
 
 function main_menu_listener(e){
   
-  if (menu_option!=-1 && menu_option!=7 && menu_option!=4)
+  valid_options=[2,3]
+  if (valid_options.includes(menu_option))
   {
     ctx.canvas.removeEventListener("click", main_menu_listener, false);
     anistep=1;
@@ -317,18 +318,15 @@ function main_menu_listener(e){
   }
   if (menu_option==1) 
   {
-    console.log("new game. YOU BROKE IT")
   }
   if (menu_option==2)
   {
-    console.log("option 2");
     ani=setInterval(settings, interval, 1);
     ctx.canvas.addEventListener("click", settings_menu_listener, false);
 
   }
   if (menu_option==3)
   {
-    console.log("option 3"); 
     ani=setInterval(credits, interval, 1);
     ctx.canvas.addEventListener("click", credits_menu_listener, false);
   }
@@ -336,8 +334,8 @@ function main_menu_listener(e){
 
 function settings_menu_listener(e)
 {
-
-  if (menu_option!=-1)
+  valid_options=[7]
+  if (valid_options.includes(menu_option))
   {
     ctx.canvas.removeEventListener("click", settings_menu_listener, false);
     anistep=1;
@@ -345,14 +343,14 @@ function settings_menu_listener(e)
   }
   if (menu_option==7)
   {
-    console.log("option 7"); 
     ani=setInterval(menu, interval, 1);
   } 
 }
 
 function credits_menu_listener(e)
 {
-  if (menu_option!=-1)
+  valid_options=[7]
+  if (valid_options.includes(menu_option))
   {
     ctx.canvas.removeEventListener("click", credits_menu_listener, false);
     anistep=1;
@@ -360,7 +358,6 @@ function credits_menu_listener(e)
   }
   if (menu_option==7)
   {
-    console.log("option 7"); 
     ani=setInterval(menu, interval, 1);
   }
 }
