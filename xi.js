@@ -354,6 +354,11 @@ function main_game_listener()
     selected.x=click_coords.x;
     selected.y=click_coords.y;
   }  
+  else if ((click_coords.y==0 && turn==1 && homerow("w").every(e=>e=="")) || (click_coords.y==5 && turn==0 && homerow("b").every(e=>e=="")))
+  {
+    spawn(click_coords, ["b","w"][turn])
+    turn^=1
+  }
   else
   {
     selected={x:-1, y:-1}
@@ -494,6 +499,7 @@ function draw_san(x,y,colour,alpha=1)
     draw_line(pxx-39,pxy+39,pxx,pxy-14, alpha);
     draw_line(pxx+39,pxy+39,pxx,pxy-14, alpha);
   }
+  ctx.lineWidth=1
 }
 
 //Game logic
@@ -513,8 +519,9 @@ function check_game()
   1==1 
 }
 
-function possible_moves(c)
+function possible_moves(coords)
 {
+  c={x:Number.parseFloat(coords.x), y:Number.parseFloat(coords.y)}
   piece=board[c.y][c.x]
   pc=piece[0]
   pt=piece[1]
@@ -550,8 +557,14 @@ function possible_moves(c)
       ]
     break;
     case "3":
-      if (pc="w"){valid=[{x:c.x, y:c.y+1}]}
-      else{valid=[{x:c.x, y:c.y-1}]}
+      if (pc=="w")
+      {
+        valid=[{x:c.x, y:c.y+1}]
+      }
+      else
+      {
+        valid=[{x:c.x, y:c.y-1}]
+      }
     break;
   }
 
@@ -571,26 +584,27 @@ function possible_moves(c)
 
 function homerow(colour)
 {
-  1==1
+  if (colour=="b"){return board[5]}
+  else if (colour=="w"){return board[0]}
 }
 
 function move(mov)
 {
-  piece=board[mov[0].y][mov[0].x]
+  piece=String(board[mov[0].y][mov[0].x])
   board[mov[0].y][mov[0].x]=""
   board[mov[1].y][mov[1].x]=piece
 }
 
-function spawn(file, c)
+function spawn(coords, c)
 {
-  1==1
+  board[coords.y][coords.x]=c+"3"
 }
 
 //---
 
-ctx.canvas.addEventListener("click", skip_to_menu, false);
-ani=setInterval(logo_animation, interval, 1);
+// ctx.canvas.addEventListener("click", skip_to_menu, false);
+// ani=setInterval(logo_animation, interval, 1);
 
-// initialize_board()
-// ctx.canvas.addEventListener("click", main_game_listener, false);
-// ani=setInterval(main_loop, interval, false);
+initialize_board()
+ctx.canvas.addEventListener("click", main_game_listener, false);
+ani=setInterval(main_loop, interval, false);
