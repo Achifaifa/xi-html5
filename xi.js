@@ -41,6 +41,14 @@ turn=0
   catch(e){mobile=0}
   console.log(mobile)
 
+//Adjusting css so canvas scales to fit window
+
+if(window.innerWidth>window.innerHeight)
+{
+  document.getElementById("xi").style.width=""
+  document.getElementById("xi").style.height="100%"
+}
+
 //Auxiliary functions
 
 function draw_line(x1,y1,x2,y2,colour="white",alpha=1)
