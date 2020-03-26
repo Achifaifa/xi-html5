@@ -571,17 +571,29 @@ function draw_ska(x,y,colour)
   }
 }
 
-function draw_san(x,y,colour) //TO-DO draw inverted pieces if configured
+function draw_san(x,y,colour)
 {
   pxx=coord_to_pixel(x);
   pxy=coord_to_pixel(y);
   ctx.lineWidth=dot_size*3;
 
-  draw_line(pxx-40,pxy+40,pxx+40,pxy+40, "white");
-  draw_line(pxx-40,pxy+40,pxx,pxy-15, "white");
-  draw_line(pxx+40,pxy+40,pxx,pxy-15, "white");
-  if (colour=="b")
+  if (colour=="w" && flip==0)
   {
+    draw_line(pxx-40,pxy+40,pxx+40,pxy+40, "white");
+    draw_line(pxx-40,pxy+40,pxx,pxy-15, "white");
+    draw_line(pxx+40,pxy+40,pxx,pxy-15, "white");
+  }
+  else if (colour=="w")
+  {
+    draw_line(pxx-40,pxy-40,pxx+40,pxy-40, "white");
+    draw_line(pxx-40,pxy-40,pxx,pxy+15, "white");
+    draw_line(pxx+40,pxy-40,pxx,pxy+15, "white");
+  }
+  else if (colour=="b")
+  {
+    draw_line(pxx-40,pxy+40,pxx+40,pxy+40, "white");
+    draw_line(pxx-40,pxy+40,pxx,pxy-15, "white");
+    draw_line(pxx+40,pxy+40,pxx,pxy-15, "white");
     draw_line(pxx-39,pxy+39,pxx+39,pxy+39, "black");
     draw_line(pxx-39,pxy+39,pxx,pxy-14, "black");
     draw_line(pxx+39,pxy+39,pxx,pxy-14, "black");
