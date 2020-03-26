@@ -436,7 +436,7 @@ function credits_menu_listener()
     if (menu_option==1)
     {
       au.play("menu_option")
-      window.open('http://duckduckgo.com')
+      window.open('https://github.com/achifaifa')
     }
     if (menu_option==2)
     {
