@@ -197,10 +197,13 @@ function menu()
   ctx.font="bold 50px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(210))+")";
   ctx.fillText("New game",150,260);
+  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(310))+")";
+  ctx.fillText("Play vs AI",150,360);
   ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(610))+")";
   ctx.fillText("Settings",150,660);
   ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(710))+")";
   ctx.fillText("Credits",150,760);
+
   if (anistep<30){anistep++;} 
 }
 
@@ -362,9 +365,8 @@ function update_click_coords()
 
 function main_menu_listener()
 {  
+  valid_options=[1,2,5,6]
 
-  console.log(menu_option)
-  valid_options=[1,5,6]
   if (valid_options.includes(menu_option))
   {
     ctx.canvas.removeEventListener("click", main_menu_listener, false);
@@ -377,6 +379,10 @@ function main_menu_listener()
     initialize_board();
     ctx.canvas.addEventListener("click", main_game_listener, false);
     ani=setInterval(main_loop, interval, false);
+  }
+  if (menu_option==2){
+    // au.play("menu_select")
+    skip_to_menu()
   }
   if (menu_option==5)
   {
