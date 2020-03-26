@@ -223,14 +223,14 @@ function credits()
   ctx.font="bold 50px quizma-light";
   ctx.fillText("Code",150,260);
   ctx.fillText("SFX",150,360);
-  // ctx.fillText("Stuff2",150,460);
+  ctx.fillText("Font",150,460);
   ctx.font="45px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(210))+")";
   ctx.fillText("Achifaifa",350,260);
   ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(310))+")";
   ctx.fillText("broumbroum",350,360);
-  // ctx.fillStyle="rgba(255,255,255,"+(50*calpha/Math.abs(410-mouse_pos.y))+")";
-  // ctx.fillText("bla",350,460);
+  ctx.fillStyle="rgba(255,255,255,"+(50*calpha/menu_alpha(410))+")";
+  ctx.fillText("Studio Typo",350,460);
   ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(710))+")";
   ctx.fillText("Back",150,760);
 
@@ -392,7 +392,7 @@ function settings_menu_listener()
 
 function credits_menu_listener()
 {
-  valid_options=[1,2,7]
+  valid_options=[1,2,3,7]
   {
     if (menu_option==1)
     {
@@ -404,6 +404,11 @@ function credits_menu_listener()
       au.play("menu_option")
       window.open('https://freesound.org/people/broumbroum/')
     }
+    if (menu_option==3)
+    {
+      au.play("menu_option")
+      window.open('http://www.studiotypo.com/')
+    }    
     if (menu_option==7)
     {
       au.play("menu_back")
