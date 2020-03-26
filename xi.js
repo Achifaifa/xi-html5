@@ -22,6 +22,7 @@ grid=0
 grid_types=["cross", "dot", "none"]
 flip=0
 flip_types=["adjacent", "opposed"]
+ai=0
 
 //
 
@@ -339,6 +340,7 @@ function skip_to_menu(e)
   au.play("menu_select")
   clearTimeout(ani);
   anistep=1
+  ai=0
   ctx.canvas.addEventListener("click", main_menu_listener, false);
   ani=setInterval(menu, interval, 1)
   ctx.canvas.removeEventListener("click", skip_to_menu);
@@ -381,8 +383,11 @@ function main_menu_listener()
     ani=setInterval(main_loop, interval, false);
   }
   if (menu_option==2){
-    // au.play("menu_select")
-    skip_to_menu()
+    au.play("menu_select")
+    initialize_board();
+    ai=1
+    ctx.canvas.addEventListener("click", main_game_listener, false);
+    ani=setInterval(main_loop, interval, false);
   }
   if (menu_option==5)
   {
@@ -427,10 +432,7 @@ function settings_menu_listener()
     {
       au.play("menu_back")
       ctx.canvas.removeEventListener("click", settings_menu_listener, false);
-      ctx.canvas.addEventListener("click", main_menu_listener, false);
-      anistep=1;
-      clearTimeout(ani);
-      ani=setInterval(menu, interval, 1);
+      skip_to_menu()
     } 
   }
 }
@@ -457,11 +459,8 @@ function credits_menu_listener()
     if (menu_option==6)
     {
       au.play("menu_back")
-      ctx.canvas.addEventListener("click", main_menu_listener, false);
       ctx.canvas.removeEventListener("click", credits_menu_listener, false);
-      anistep=1;
-      clearTimeout(ani);
-      ani=setInterval(menu, interval, 1);
+      skip_to_menu()
     }
   }
 }
@@ -493,6 +492,12 @@ function main_game_listener()
   {
     selected={x:-1, y:-1}
     prev={x:-1, y:-1}
+  }
+
+  if (ai==1 && turn==1)
+  {
+    ai_move()
+    turn^=1
   }
 
   if (check_game()!=0)
@@ -769,8 +774,17 @@ function spawn(coords, c)
   board[coords.y][coords.x]=c+"z"
 }
 
-//Always-on listeners
+function ai_move()
+{
+  //get all pieces
+  //check if a piece can be taken
+  //check if san can be moved
+  //check if a piece on the homerow can be moved
+  //spawn san if possible
+  //move at random
+}
 
+//Always-on listeners
 
 ctx.canvas.addEventListener("click", update_menu_option);
 ctx.canvas.addEventListener('mousemove', function(e){
@@ -783,8 +797,3 @@ ctx.canvas.addEventListener('mousemove', function(e){
 ctx.canvas.addEventListener("click", skip_to_menu, false);
 loader()
 ani=setInterval(logo_animation, interval, 1);
-
-//Testing 
-// initialize_board()
-// board[0][0]="bz"
-// ani=setInterval(results, interval);
