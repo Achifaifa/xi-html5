@@ -51,6 +51,36 @@ if(window.innerWidth>window.innerHeight)
   document.getElementById("xi").style.height="100%"
 }
 
+//Audio management
+
+au=new Object();
+
+// au.stop_all=function()
+// {
+//   for(i=0; i<sounds.length; i++) {eval("this."+sounds[i]+".pause()");}
+// }
+
+au.play=function(it)
+{
+  tem=eval("this."+it+".cloneNode();")
+  tem.play()
+}
+
+sounds=[
+"menu_back",
+"menu_select",
+"menu_option",
+]
+
+function loader()
+{
+  for (i=0; i<sounds.length; i++)
+  {
+    it="./audio/"+sounds[i]+".wav";
+    vname=sounds[i]
+    eval("au."+vname+"=new Audio('"+it+"');");
+  }
+}
 //Auxiliary functions
 
 function draw_line(x1,y1,x2,y2,colour="white",alpha=1)
@@ -188,13 +218,13 @@ function credits()
   ctx.fillText(version,210,160);
   ctx.font="bold 50px quizma-light";
   ctx.fillText("Code",150,260);
-  // ctx.fillText("Stuff",150,360);
+  ctx.fillText("SFX",150,360);
   // ctx.fillText("Stuff2",150,460);
   ctx.font="45px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(210))+")";
   ctx.fillText("Achifaifa",350,260);
-  // ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(310-mouse_pos.y))+")";
-  // ctx.fillText("bla",350,360);
+  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(310))+")";
+  ctx.fillText("broumbroum",350,360);
   // ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(410-mouse_pos.y))+")";
   // ctx.fillText("bla",350,460);
   ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(710))+")";
@@ -292,18 +322,21 @@ function main_menu_listener()
   }
   if (menu_option==1) 
   {
+    au.play("menu_select")
     initialize_board();
     ctx.canvas.addEventListener("click", main_game_listener, false);
     ani=setInterval(main_loop, interval, false);
   }
   if (menu_option==2)
   {
+    au.play("menu_select")
     ani=setInterval(settings, interval, 1);
     ctx.canvas.addEventListener("click", settings_menu_listener, false);
 
   }
   if (menu_option==3)
   {
+    au.play("menu_select")
     ani=setInterval(credits, interval, 1);
     ctx.canvas.addEventListener("click", credits_menu_listener, false);
   }
@@ -316,14 +349,17 @@ function settings_menu_listener()
   {
     if (menu_option==1)
     {
+      au.play("menu_option")
       grid_type=(grid_type+1)%grid_types.length
     }
     if (menu_option==2)
     {
+      au.play("menu_option")
       flip=(flip+1)%flip_types.length
     }
     else if (menu_option==7)
     {
+      au.play("menu_back")
       ctx.canvas.removeEventListener("click", settings_menu_listener, false);
       anistep=1;
       clearTimeout(ani);
@@ -334,16 +370,26 @@ function settings_menu_listener()
 
 function credits_menu_listener()
 {
-  valid_options=[7]
-  if (valid_options.includes(menu_option))
+  valid_options=[1,2,7]
   {
-    ctx.canvas.removeEventListener("click", credits_menu_listener, false);
-    anistep=1;
-    clearTimeout(ani);
-  }
-  if (menu_option==7)
-  {
-    ani=setInterval(menu, interval, 1);
+    if (menu_option==1)
+    {
+      au.play("menu_option")
+      window.open('http://duckduckgo.com')
+    }
+    if (menu_option==2)
+    {
+      au.play("menu_option")
+      window.open('https://freesound.org/people/broumbroum/')
+    }
+    if (menu_option==7)
+    {
+      au.play("menu_back")
+      ctx.canvas.removeEventListener("click", credits_menu_listener, false);
+      anistep=1;
+      clearTimeout(ani);
+      ani=setInterval(menu, interval, 1);
+    }
   }
 }
 
@@ -496,7 +542,7 @@ function draw_ska(x,y,colour)
   }
 }
 
-function draw_san(x,y,colour)
+function draw_san(x,y,colour) //TO-DO draw inverted pieces if configured
 {
   pxx=coord_to_pixel(x);
   pxy=coord_to_pixel(y);
@@ -615,6 +661,8 @@ function spawn(coords, c)
 //---
 
 ctx.canvas.addEventListener("click", skip_to_menu, false);
+loader()
+console.log(au)
 ani=setInterval(logo_animation, interval, 1);
 
 // initialize_board()
