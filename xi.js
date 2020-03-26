@@ -13,11 +13,12 @@ version="0,1"
 
 fps=30
 interval=1000/fps
-grid_type=0
+
 sfx=1
 sfx_types=["off", "on"]
 music=1
 music_types=["off", "on"]
+grid=0
 grid_types=["cross", "dot", "none"]
 flip=0
 flip_types=["adjacent", "opposed"]
@@ -169,7 +170,8 @@ function title_animation(i)
   ctx.fillStyle="rgba(255,255,255,"+(anistep/80)+")";
   ctx.textAlign="center"
   ctx.fillText("Xi",500,500);
-  if (anistep==80){
+  if (anistep==80)
+  {
     clearTimeout(ani);
     ctx.canvas.addEventListener("click", main_menu_listener, false);
     ani=setInterval(title_animation, interval, 0)
@@ -195,10 +197,10 @@ function menu()
   ctx.font="bold 50px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(210))+")";
   ctx.fillText("New game",150,260);
-  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(310))+")";
-  ctx.fillText("Settings",150,360);
-  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(410))+")";
-  ctx.fillText("Credits",150,460);
+  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(610))+")";
+  ctx.fillText("Settings",150,660);
+  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(710))+")";
+  ctx.fillText("Credits",150,760);
   if (anistep<30){anistep++;} 
 }
 
@@ -223,14 +225,14 @@ function credits()
   ctx.font="bold 50px quizma-light";
   ctx.fillText("Code",150,260);
   ctx.fillText("SFX",150,360);
-  // ctx.fillText("Stuff2",150,460);
+  ctx.fillText("Font",150,460);
   ctx.font="45px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(210))+")";
   ctx.fillText("Achifaifa",350,260);
   ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(310))+")";
   ctx.fillText("broumbroum",350,360);
-  // ctx.fillStyle="rgba(255,255,255,"+(50*calpha/Math.abs(410-mouse_pos.y))+")";
-  // ctx.fillText("bla",350,460);
+  ctx.fillStyle="rgba(255,255,255,"+(50*calpha/menu_alpha(410))+")";
+  ctx.fillText("Studio Typo",350,460);
   ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(710))+")";
   ctx.fillText("Back",150,760);
 
@@ -268,13 +270,47 @@ function settings()
 
   ctx.font="45px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+salpha+")";
-  ctx.fillText(grid_types[grid_type],350,260);
+  ctx.fillText(grid_types[grid],350,260);
   ctx.fillText(flip_types[flip],350,360);
   ctx.fillText(sfx_types[sfx],350,460);
   ctx.fillText(music_types[music],350,560);
 
   ctx.fillStyle="rgba(255,255,255,"+salpha+")";  ctx.fillText("Back",150,760);
   if (anistep<30){anistep++;}
+}
+
+function results()
+{
+  ctx.clearRect(0,0,1000,1000);
+  draw_game();
+  if (anistep<40)
+  {
+    ctx.fillStyle="rgba(0,0,0,"+(0.65*anistep/40)+")"
+    ctx.fillRect(0,0,1000,1000)
+  }
+  if (anistep>=40)
+  {
+    ctx.fillStyle="rgba(0,0,0,0.7)";
+    ctx.fillRect(0,0,1000,1000);
+    ctx.font="80px quizma-light";
+    ctx.fillStyle="rgba(255,255,255,"+((anistep-40)/40)+")";
+    ctx.textAlign="center"
+    ctx.fillText("Finish!",500,450);
+    ctx.font="70px quizma-light";
+    if (anistep>80)
+    {
+      ctx.fillStyle="rgba(255,255,255,"+((anistep-80)/74)+")";
+      if (check_game()==1)
+      {
+        ctx.fillText("Black wins",500,550);
+      }
+      else if (check_game()==-1)
+      {
+        ctx.fillText("White wins",500,550);
+      }
+    }
+  }
+  if(anistep<140){anistep++;}
 }
 
 function main_loop()
@@ -297,6 +333,7 @@ function main_loop()
 
 function skip_to_menu(e)
 {
+  au.play("menu_select")
   clearTimeout(ani);
   anistep=1
   ctx.canvas.addEventListener("click", main_menu_listener, false);
@@ -306,11 +343,12 @@ function skip_to_menu(e)
 
 function update_menu_option(e)
 {
-  if(mouse_pos.y>175 && mouse_pos.y<270){menu_option=1;}
-  else if(mouse_pos.y>270 && mouse_pos.y<370){menu_option=2;}
-  else if(mouse_pos.y>370 && mouse_pos.y<470){menu_option=3;}
-  else if(mouse_pos.y>470 && mouse_pos.y<570){menu_option=4;}
-  else if(mouse_pos.y>670 && mouse_pos.y<770){menu_option=7;}
+       if(mouse_pos.y>220 && mouse_pos.y<270){menu_option=1;}
+  else if(mouse_pos.y>320 && mouse_pos.y<370){menu_option=2;}
+  else if(mouse_pos.y>420 && mouse_pos.y<470){menu_option=3;}
+  else if(mouse_pos.y>520 && mouse_pos.y<570){menu_option=4;}
+  else if(mouse_pos.y>620 && mouse_pos.y<670){menu_option=5;}
+  else if(mouse_pos.y>720 && mouse_pos.y<770){menu_option=6;}
   else {menu_option=-1}
 }
 
@@ -324,7 +362,9 @@ function update_click_coords()
 
 function main_menu_listener()
 {  
-  valid_options=[1,2,3]
+
+  console.log(menu_option)
+  valid_options=[1,5,6]
   if (valid_options.includes(menu_option))
   {
     ctx.canvas.removeEventListener("click", main_menu_listener, false);
@@ -338,14 +378,13 @@ function main_menu_listener()
     ctx.canvas.addEventListener("click", main_game_listener, false);
     ani=setInterval(main_loop, interval, false);
   }
-  if (menu_option==2)
+  if (menu_option==5)
   {
     au.play("menu_select")
     ani=setInterval(settings, interval, 1);
     ctx.canvas.addEventListener("click", settings_menu_listener, false);
-
   }
-  if (menu_option==3)
+  if (menu_option==6)
   {
     au.play("menu_select")
     ani=setInterval(credits, interval, 1);
@@ -355,13 +394,13 @@ function main_menu_listener()
 
 function settings_menu_listener()
 {
-  valid_options=[1,2,3,4,7]
+  valid_options=[1,2,3,4,6]
   if (valid_options.includes(menu_option))
   {
     if (menu_option==1)
     {
       au.play("menu_option")
-      grid_type=(grid_type+1)%grid_types.length
+      grid=(grid+1)%grid_types.length
     }
     if (menu_option==2)
     {
@@ -378,7 +417,7 @@ function settings_menu_listener()
       au.play("menu_option")
       music=(music+1)%music_types.length
     }
-    else if (menu_option==7)
+    else if (menu_option==6)
     {
       au.play("menu_back")
       ctx.canvas.removeEventListener("click", settings_menu_listener, false);
@@ -392,7 +431,7 @@ function settings_menu_listener()
 
 function credits_menu_listener()
 {
-  valid_options=[1,2,7]
+  valid_options=[1,2,3,6]
   {
     if (menu_option==1)
     {
@@ -404,7 +443,12 @@ function credits_menu_listener()
       au.play("menu_option")
       window.open('https://freesound.org/people/broumbroum/')
     }
-    if (menu_option==7)
+    if (menu_option==3)
+    {
+      au.play("menu_option")
+      window.open('http://www.studiotypo.com/')
+    }    
+    if (menu_option==6)
     {
       au.play("menu_back")
       ctx.canvas.addEventListener("click", main_menu_listener, false);
@@ -418,7 +462,6 @@ function credits_menu_listener()
 
 function main_game_listener()
 {
-
   update_click_coords();
   clicked_piece=board[click_coords.y][click_coords.x]
 
@@ -445,12 +488,22 @@ function main_game_listener()
     selected={x:-1, y:-1}
     prev={x:-1, y:-1}
   }
+
+  if (check_game()!=0)
+  {
+    anistep=1
+    ctx.canvas.removeEventListener("click", main_game_listener);
+    clearTimeout(ani);
+    ani=setInterval(results, interval, false);
+    ctx.canvas.addEventListener("click", skip_listener);
+  }
 }
 
-ctx.canvas.addEventListener("click", update_menu_option);
-ctx.canvas.addEventListener('mousemove', function(e){
-  mouse_pos = mouse_position(ctx.canvas, e);
-}, false);
+function skip_listener()
+{
+  ctx.canvas.removeEventListener("click", skip_listener);
+  skip_to_menu();
+}
 
 //Drawing functions
 
@@ -459,11 +512,11 @@ function draw_grid()
   ctx.lineWidth=1;
   for (cx=1000/6; cx<1000-(1000/6); cx+=1000/6){
     for (cy=1000/6; cy<1000-(1000/6); cy+=1000/6){
-      if(grid_type==0){
+      if(grid==0){
         draw_line(cx-3,cy,cx+3,cy, "white");
         draw_line(cx,cy-3,cx,cy+3, "white");
       }
-      if(grid_type==1)
+      if(grid==1)
       {
         ctx.strokeRect(cx,cy,1,1);
       }
@@ -565,17 +618,29 @@ function draw_ska(x,y,colour)
   }
 }
 
-function draw_san(x,y,colour) //TO-DO draw inverted pieces if configured
+function draw_san(x,y,colour)
 {
   pxx=coord_to_pixel(x);
   pxy=coord_to_pixel(y);
   ctx.lineWidth=dot_size*3;
 
-  draw_line(pxx-40,pxy+40,pxx+40,pxy+40, "white");
-  draw_line(pxx-40,pxy+40,pxx,pxy-15, "white");
-  draw_line(pxx+40,pxy+40,pxx,pxy-15, "white");
-  if (colour=="b")
+  if (colour=="w" && flip==0)
   {
+    draw_line(pxx-40,pxy+40,pxx+40,pxy+40, "white");
+    draw_line(pxx-40,pxy+40,pxx,pxy-15, "white");
+    draw_line(pxx+40,pxy+40,pxx,pxy-15, "white");
+  }
+  else if (colour=="w")
+  {
+    draw_line(pxx-40,pxy-40,pxx+40,pxy-40, "white");
+    draw_line(pxx-40,pxy-40,pxx,pxy+15, "white");
+    draw_line(pxx+40,pxy-40,pxx,pxy+15, "white");
+  }
+  else if (colour=="b")
+  {
+    draw_line(pxx-40,pxy+40,pxx+40,pxy+40, "white");
+    draw_line(pxx-40,pxy+40,pxx,pxy-15, "white");
+    draw_line(pxx+40,pxy+40,pxx,pxy-15, "white");
     draw_line(pxx-39,pxy+39,pxx+39,pxy+39, "black");
     draw_line(pxx-39,pxy+39,pxx,pxy-14, "black");
     draw_line(pxx+39,pxy+39,pxx,pxy-14, "black");
@@ -597,7 +662,24 @@ function initialize_board()
 
 function check_game()
 {
-  1==1 
+  if(homerow("b").filter(e=>e=="wz").length>0){return -1}
+  if(homerow("w").filter(e=>e=="bz").length>0){return 1}
+
+  piececount={"b":0, "w":0}
+  for(i=0; i<6; i++)
+  {
+    for(j=0; j<6; j++)
+    {
+      it=board[j][i]
+      if(it!="")
+      {
+        eval("piececount."+it[0]+"+=1");
+      }
+    }
+  }
+  if (piececount.b==0){return -1}
+  else if (piececount.w==0){return 1}
+  return 0
 }
 
 function possible_moves(coords)
@@ -681,12 +763,22 @@ function spawn(coords, c)
   board[coords.y][coords.x]=c+"z"
 }
 
-//---
+//Always-on listeners
+
+
+ctx.canvas.addEventListener("click", update_menu_option);
+ctx.canvas.addEventListener('mousemove', function(e){
+  mouse_pos = mouse_position(ctx.canvas, e);
+  console.log(mouse_pos)
+}, false);
+
+//Main listener
 
 ctx.canvas.addEventListener("click", skip_to_menu, false);
 loader()
 ani=setInterval(logo_animation, interval, 1);
 
+//Testing 
 // initialize_board()
-// ctx.canvas.addEventListener("click", main_game_listener, false);
-// ani=setInterval(main_loop, interval, false);
+// board[0][0]="bz"
+// ani=setInterval(results, interval);
