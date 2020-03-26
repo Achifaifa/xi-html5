@@ -13,11 +13,12 @@ version="0,1"
 
 fps=30
 interval=1000/fps
-grid_type=0
+
 sfx=1
 sfx_types=["off", "on"]
 music=1
 music_types=["off", "on"]
+grid=0
 grid_types=["cross", "dot", "none"]
 flip=0
 flip_types=["adjacent", "opposed"]
@@ -268,7 +269,7 @@ function settings()
 
   ctx.font="45px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+salpha+")";
-  ctx.fillText(grid_types[grid_type],350,260);
+  ctx.fillText(grid_types[grid],350,260);
   ctx.fillText(flip_types[flip],350,360);
   ctx.fillText(sfx_types[sfx],350,460);
   ctx.fillText(music_types[music],350,560);
@@ -361,7 +362,7 @@ function settings_menu_listener()
     if (menu_option==1)
     {
       au.play("menu_option")
-      grid_type=(grid_type+1)%grid_types.length
+      grid=(grid+1)%grid_types.length
     }
     if (menu_option==2)
     {
@@ -464,11 +465,11 @@ function draw_grid()
   ctx.lineWidth=1;
   for (cx=1000/6; cx<1000-(1000/6); cx+=1000/6){
     for (cy=1000/6; cy<1000-(1000/6); cy+=1000/6){
-      if(grid_type==0){
+      if(grid==0){
         draw_line(cx-3,cy,cx+3,cy, "white");
         draw_line(cx,cy-3,cx,cy+3, "white");
       }
-      if(grid_type==1)
+      if(grid==1)
       {
         ctx.strokeRect(cx,cy,1,1);
       }
