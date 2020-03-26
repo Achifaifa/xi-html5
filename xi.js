@@ -170,7 +170,8 @@ function title_animation(i)
   ctx.fillStyle="rgba(255,255,255,"+(anistep/80)+")";
   ctx.textAlign="center"
   ctx.fillText("Xi",500,500);
-  if (anistep==80){
+  if (anistep==80)
+  {
     clearTimeout(ani);
     ctx.canvas.addEventListener("click", main_menu_listener, false);
     ani=setInterval(title_animation, interval, 0)
@@ -278,6 +279,40 @@ function settings()
   if (anistep<30){anistep++;}
 }
 
+function results()
+{
+  ctx.clearRect(0,0,1000,1000);
+  draw_game();
+  if (anistep<40)
+  {
+    ctx.fillStyle="rgba(0,0,0,"+(0.65*anistep/40)+")"
+    ctx.fillRect(0,0,1000,1000)
+  }
+  if (anistep>=40)
+  {
+    ctx.fillStyle="rgba(0,0,0,0.7)";
+    ctx.fillRect(0,0,1000,1000);
+    ctx.font="80px quizma-light";
+    ctx.fillStyle="rgba(255,255,255,"+((anistep-40)/40)+")";
+    ctx.textAlign="center"
+    ctx.fillText("Finish!",500,450);
+    ctx.font="70px quizma-light";
+    if (anistep>80)
+    {
+      ctx.fillStyle="rgba(255,255,255,"+((anistep-80)/74)+")";
+      if (check_game()==1)
+      {
+        ctx.fillText("Black wins",500,550);
+      }
+      else if (check_game()==-1)
+      {
+        ctx.fillText("White wins",500,550);
+      }
+    }
+  }
+  if(anistep<140){anistep++;}
+}
+
 function main_loop()
 {
   //initial fade, done manually
@@ -298,6 +333,7 @@ function main_loop()
 
 function skip_to_menu(e)
 {
+  au.play("menu_select")
   clearTimeout(ani);
   anistep=1
   ctx.canvas.addEventListener("click", main_menu_listener, false);
@@ -325,6 +361,7 @@ function update_click_coords()
 
 function main_menu_listener()
 {  
+
   valid_options=[1,2,3]
   if (valid_options.includes(menu_option))
   {
@@ -424,7 +461,6 @@ function credits_menu_listener()
 
 function main_game_listener()
 {
-
   update_click_coords();
   clicked_piece=board[click_coords.y][click_coords.x]
 
@@ -451,12 +487,22 @@ function main_game_listener()
     selected={x:-1, y:-1}
     prev={x:-1, y:-1}
   }
+
+  if (check_game()!=0)
+  {
+    anistep=1
+    ctx.canvas.removeEventListener("click", main_game_listener);
+    clearTimeout(ani);
+    ani=setInterval(results, interval, false);
+    ctx.canvas.addEventListener("click", skip_listener);
+  }
 }
 
-ctx.canvas.addEventListener("click", update_menu_option);
-ctx.canvas.addEventListener('mousemove', function(e){
-  mouse_pos = mouse_position(ctx.canvas, e);
-}, false);
+function skip_listener()
+{
+  ctx.canvas.removeEventListener("click", skip_listener);
+  skip_to_menu();
+}
 
 //Drawing functions
 
@@ -615,7 +661,24 @@ function initialize_board()
 
 function check_game()
 {
-  1==1 
+  if(homerow("b").filter(e=>e=="wz").length>0){return -1}
+  if(homerow("w").filter(e=>e=="bz").length>0){return 1}
+
+  piececount={"b":0, "w":0}
+  for(i=0; i<6; i++)
+  {
+    for(j=0; j<6; j++)
+    {
+      it=board[j][i]
+      if(it!="")
+      {
+        eval("piececount."+it[0]+"+=1");
+      }
+    }
+  }
+  if (piececount.b==0){return -1}
+  else if (piececount.w==0){return 1}
+  return 0
 }
 
 function possible_moves(coords)
@@ -699,12 +762,21 @@ function spawn(coords, c)
   board[coords.y][coords.x]=c+"z"
 }
 
-//---
+//Always-on listeners
+
+
+ctx.canvas.addEventListener("click", update_menu_option);
+ctx.canvas.addEventListener('mousemove', function(e){
+  mouse_pos = mouse_position(ctx.canvas, e);
+}, false);
+
+//Main listener
 
 ctx.canvas.addEventListener("click", skip_to_menu, false);
 loader()
 ani=setInterval(logo_animation, interval, 1);
 
+//Testing 
 // initialize_board()
-// ctx.canvas.addEventListener("click", main_game_listener, false);
-// ani=setInterval(main_loop, interval, false);
+// board[0][0]="bz"
+// ani=setInterval(results, interval);
