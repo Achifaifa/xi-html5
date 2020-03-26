@@ -197,10 +197,10 @@ function menu()
   ctx.font="bold 50px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(210))+")";
   ctx.fillText("New game",150,260);
-  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(310))+")";
-  ctx.fillText("Settings",150,360);
-  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(410))+")";
-  ctx.fillText("Credits",150,460);
+  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(610))+")";
+  ctx.fillText("Settings",150,660);
+  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(710))+")";
+  ctx.fillText("Credits",150,760);
   if (anistep<30){anistep++;} 
 }
 
@@ -343,11 +343,12 @@ function skip_to_menu(e)
 
 function update_menu_option(e)
 {
-  if(mouse_pos.y>175 && mouse_pos.y<270){menu_option=1;}
-  else if(mouse_pos.y>270 && mouse_pos.y<370){menu_option=2;}
-  else if(mouse_pos.y>370 && mouse_pos.y<470){menu_option=3;}
-  else if(mouse_pos.y>470 && mouse_pos.y<570){menu_option=4;}
-  else if(mouse_pos.y>670 && mouse_pos.y<770){menu_option=7;}
+       if(mouse_pos.y>220 && mouse_pos.y<270){menu_option=1;}
+  else if(mouse_pos.y>320 && mouse_pos.y<370){menu_option=2;}
+  else if(mouse_pos.y>420 && mouse_pos.y<470){menu_option=3;}
+  else if(mouse_pos.y>520 && mouse_pos.y<570){menu_option=4;}
+  else if(mouse_pos.y>620 && mouse_pos.y<670){menu_option=5;}
+  else if(mouse_pos.y>720 && mouse_pos.y<770){menu_option=6;}
   else {menu_option=-1}
 }
 
@@ -362,7 +363,8 @@ function update_click_coords()
 function main_menu_listener()
 {  
 
-  valid_options=[1,2,3]
+  console.log(menu_option)
+  valid_options=[1,5,6]
   if (valid_options.includes(menu_option))
   {
     ctx.canvas.removeEventListener("click", main_menu_listener, false);
@@ -376,14 +378,13 @@ function main_menu_listener()
     ctx.canvas.addEventListener("click", main_game_listener, false);
     ani=setInterval(main_loop, interval, false);
   }
-  if (menu_option==2)
+  if (menu_option==5)
   {
     au.play("menu_select")
     ani=setInterval(settings, interval, 1);
     ctx.canvas.addEventListener("click", settings_menu_listener, false);
-
   }
-  if (menu_option==3)
+  if (menu_option==6)
   {
     au.play("menu_select")
     ani=setInterval(credits, interval, 1);
@@ -393,7 +394,7 @@ function main_menu_listener()
 
 function settings_menu_listener()
 {
-  valid_options=[1,2,3,4,7]
+  valid_options=[1,2,3,4,6]
   if (valid_options.includes(menu_option))
   {
     if (menu_option==1)
@@ -416,7 +417,7 @@ function settings_menu_listener()
       au.play("menu_option")
       music=(music+1)%music_types.length
     }
-    else if (menu_option==7)
+    else if (menu_option==6)
     {
       au.play("menu_back")
       ctx.canvas.removeEventListener("click", settings_menu_listener, false);
@@ -430,7 +431,7 @@ function settings_menu_listener()
 
 function credits_menu_listener()
 {
-  valid_options=[1,2,3,7]
+  valid_options=[1,2,3,6]
   {
     if (menu_option==1)
     {
@@ -447,7 +448,7 @@ function credits_menu_listener()
       au.play("menu_option")
       window.open('http://www.studiotypo.com/')
     }    
-    if (menu_option==7)
+    if (menu_option==6)
     {
       au.play("menu_back")
       ctx.canvas.addEventListener("click", main_menu_listener, false);
@@ -768,6 +769,7 @@ function spawn(coords, c)
 ctx.canvas.addEventListener("click", update_menu_option);
 ctx.canvas.addEventListener('mousemove', function(e){
   mouse_pos = mouse_position(ctx.canvas, e);
+  console.log(mouse_pos)
 }, false);
 
 //Main listener
