@@ -14,6 +14,10 @@ version="0,1"
 fps=30
 interval=1000/fps
 grid_type=0
+sfx=1
+sfx_types=["off", "on"]
+music=1
+music_types=["off", "on"]
 grid_types=["cross", "dot", "none"]
 flip=0
 flip_types=["adjacent", "opposed"]
@@ -55,15 +59,13 @@ if(window.innerWidth>window.innerHeight)
 
 au=new Object();
 
-// au.stop_all=function()
-// {
-//   for(i=0; i<sounds.length; i++) {eval("this."+sounds[i]+".pause()");}
-// }
-
-au.play=function(it)
+au.play=function(s)
 {
-  tem=eval("this."+it+".cloneNode();")
-  tem.play()
+  if (sfx==1)
+  {
+    tem=eval("this."+s+".cloneNode();")
+    tem.play()
+  }
 }
 
 sounds=[
@@ -167,7 +169,11 @@ function title_animation(i)
   ctx.fillStyle="rgba(255,255,255,"+(anistep/80)+")";
   ctx.textAlign="center"
   ctx.fillText("Xi",500,500);
-  if (anistep==80){clearTimeout(ani);ani=setInterval(title_animation, interval, 0)}
+  if (anistep==80){
+    clearTimeout(ani);
+    ctx.canvas.addEventListener("click", main_menu_listener, false);
+    ani=setInterval(title_animation, interval, 0)
+  }
   if(i==1){anistep++;}else{anistep--;}
   if (anistep==0){clearTimeout(ani);ani=setInterval(menu, interval, 1)}
 }
@@ -175,7 +181,7 @@ function title_animation(i)
 function menu()
 {
   ctx.clearRect(0,0,1000,1000)
-  malpha=anistep/50;
+  malpha=anistep/30;
   draw_line(80,120,80,880, "white", malpha);
   draw_line(80,120,100,120, "white", malpha);
 
@@ -187,22 +193,20 @@ function menu()
   ctx.font="20px quizma-light";
   ctx.fillText(version,210,160);
   ctx.font="bold 50px quizma-light";
-  ctx.fillStyle="rgba(255,255,255,"+(50*malpha/menu_alpha(210))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(210))+")";
   ctx.fillText("New game",150,260);
-  ctx.fillStyle="rgba(255,255,255,"+(50*malpha/menu_alpha(310))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(310))+")";
   ctx.fillText("Settings",150,360);
-  ctx.fillStyle="rgba(255,255,255,"+(50*malpha/menu_alpha(410))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(410))+")";
   ctx.fillText("Credits",150,460);
-  if (anistep<50){anistep++;}
-  else if (anistep==50){anistep++; ctx.canvas.addEventListener("click", main_menu_listener, false)}
- 
+  if (anistep<30){anistep++;} 
 }
 
 function credits()
 {
   ctx.clearRect(0,0,1000,1000)
 
-  calpha=anistep/50
+  calpha=anistep/30
   draw_line(80,120,80,880, "white", calpha);
   draw_line(80,120,100,120, "white", calpha);
   draw_line(250,120,275,120, "white", calpha);
@@ -221,23 +225,23 @@ function credits()
   ctx.fillText("SFX",150,360);
   // ctx.fillText("Stuff2",150,460);
   ctx.font="45px quizma-light";
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(210))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(210))+")";
   ctx.fillText("Achifaifa",350,260);
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(310))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(310))+")";
   ctx.fillText("broumbroum",350,360);
-  // ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/Math.abs(410-mouse_pos.y))+")";
+  // ctx.fillStyle="rgba(255,255,255,"+(50*calpha/Math.abs(410-mouse_pos.y))+")";
   // ctx.fillText("bla",350,460);
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(710))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(710))+")";
   ctx.fillText("Back",150,760);
 
-  if (anistep<50){anistep++}
+  if (anistep<30){anistep++}
 }
 
 function settings()
 {
   ctx.clearRect(0,0,1000,1000)
 
-  salpha=anistep/50
+  salpha=anistep/30
   draw_line(80,120,80,880, "white", salpha);
   draw_line(80,120,100,120, "white", salpha);
   draw_line(250,120,275,120, "white", salpha);
@@ -252,19 +256,25 @@ function settings()
   ctx.font="20px quizma-light";
   ctx.fillText(version,210,160);
   ctx.font="bold 50px quizma-light";
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(210))+")";
+
+  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(210))+")";
   ctx.fillText("Grid",150,260);
-  ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(310))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(310))+")";
   ctx.fillText("Players",150,360);
-  // ctx.fillStyle="rgba(255,255,255,"+(50*(anistep/50)/menu_alpha(410))+")";
-  // ctx.fillText("Setting3",150,460);
+  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(410))+")";
+  ctx.fillText("SFX",150,460);
+  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(410))+")";
+  ctx.fillText("Music",150,560);
+
   ctx.font="45px quizma-light";
-  ctx.fillStyle="rgba(255,255,255,"+(anistep/50)+")";
+  ctx.fillStyle="rgba(255,255,255,"+salpha+")";
   ctx.fillText(grid_types[grid_type],350,260);
   ctx.fillText(flip_types[flip],350,360);
-  // ctx.fillText("bla",350,460);
-  ctx.fillStyle="rgba(255,255,255,"+(anistep/50)+")";  ctx.fillText("Back",150,760);
-  if (anistep<50){anistep++;}
+  ctx.fillText(sfx_types[sfx],350,460);
+  ctx.fillText(music_types[music],350,560);
+
+  ctx.fillStyle="rgba(255,255,255,"+salpha+")";  ctx.fillText("Back",150,760);
+  if (anistep<30){anistep++;}
 }
 
 function main_loop()
@@ -289,6 +299,7 @@ function skip_to_menu(e)
 {
   clearTimeout(ani);
   anistep=1
+  ctx.canvas.addEventListener("click", main_menu_listener, false);
   ani=setInterval(menu, interval, 1)
   ctx.canvas.removeEventListener("click", skip_to_menu);
 }
@@ -344,7 +355,7 @@ function main_menu_listener()
 
 function settings_menu_listener()
 {
-  valid_options=[1,2,7]
+  valid_options=[1,2,3,4,7]
   if (valid_options.includes(menu_option))
   {
     if (menu_option==1)
@@ -357,10 +368,21 @@ function settings_menu_listener()
       au.play("menu_option")
       flip=(flip+1)%flip_types.length
     }
+    if (menu_option==3)
+    {
+      au.play("menu_option")
+      sfx=(sfx+1)%sfx_types.length
+    }
+    if (menu_option==4)
+    {
+      au.play("menu_option")
+      music=(music+1)%music_types.length
+    }
     else if (menu_option==7)
     {
       au.play("menu_back")
       ctx.canvas.removeEventListener("click", settings_menu_listener, false);
+      ctx.canvas.addEventListener("click", main_menu_listener, false);
       anistep=1;
       clearTimeout(ani);
       ani=setInterval(menu, interval, 1);
@@ -385,6 +407,7 @@ function credits_menu_listener()
     if (menu_option==7)
     {
       au.play("menu_back")
+      ctx.canvas.addEventListener("click", main_menu_listener, false);
       ctx.canvas.removeEventListener("click", credits_menu_listener, false);
       anistep=1;
       clearTimeout(ani);
@@ -662,7 +685,6 @@ function spawn(coords, c)
 
 ctx.canvas.addEventListener("click", skip_to_menu, false);
 loader()
-console.log(au)
 ani=setInterval(logo_animation, interval, 1);
 
 // initialize_board()
