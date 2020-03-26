@@ -331,7 +331,7 @@ function main_loop()
 
 //Listeners
 
-function skip_to_menu(e)
+function skip_to_menu()
 {
   au.play("menu_select")
   clearTimeout(ani);
@@ -341,7 +341,7 @@ function skip_to_menu(e)
   ctx.canvas.removeEventListener("click", skip_to_menu);
 }
 
-function update_menu_option(e)
+function update_menu_option()
 {
        if(mouse_pos.y>220 && mouse_pos.y<270){menu_option=1;}
   else if(mouse_pos.y>320 && mouse_pos.y<370){menu_option=2;}
@@ -363,7 +363,6 @@ function update_click_coords()
 function main_menu_listener()
 {  
 
-  console.log(menu_option)
   valid_options=[1,5,6]
   if (valid_options.includes(menu_option))
   {
@@ -769,7 +768,6 @@ function spawn(coords, c)
 ctx.canvas.addEventListener("click", update_menu_option);
 ctx.canvas.addEventListener('mousemove', function(e){
   mouse_pos = mouse_position(ctx.canvas, e);
-  console.log(mouse_pos)
 }, false);
 
 //Main listener
