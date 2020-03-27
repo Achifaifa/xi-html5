@@ -30,6 +30,7 @@ ai=0
 
 anistep=1
 ani=0
+tutorial_page=0
 piece_size=(1000/12)-10
 dot_size=piece_size/5
 
@@ -87,6 +88,7 @@ function loader()
     eval("au."+vname+"=new Audio('"+it+"');");
   }
 }
+
 //Auxiliary functions
 
 function draw_line(x1,y1,x2,y2,colour="white",alpha=1)
@@ -205,6 +207,8 @@ function menu()
   ctx.fillText("New game",150,260);
   ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(300))+")";
   ctx.fillText("Play vs AI",150,360);
+  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(400))+")";
+  ctx.fillText("Tutorial",150,460);
   ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(600))+")";
   ctx.fillText("Settings",150,660);
   ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(700))+")";
@@ -328,6 +332,129 @@ function results()
   if(anistep<140){anistep++;}
 }
 
+function tutorial()
+{
+  ctx.clearRect(0,0,1000,1000)
+
+  talpha=anistep/30
+  draw_line(80,120,80,880, "white", talpha);
+  draw_line(80,120,100,120, "white", talpha);
+  draw_line(250,120,275,120, "white", talpha);
+
+  ctx.fillStyle="rgba(255,255,255,"+talpha+")";
+  ctx.textAlign="start";
+
+  ctx.font="120px quizma-light";
+  ctx.fillText("Xi",125,160);
+  ctx.font="75px quizma-light";
+  ctx.fillText("Tutorial",300,145);
+  ctx.font="20px quizma-light";
+  ctx.fillText(version,210,160);
+
+  if(tutorial_page==0)
+  {
+    ctx.textAlign="start"
+    ctx.font="60px quizma-light";
+    ctx.fillText("Xi", 125,275);
+    ctx.font="35px quizma-light";
+    ctx.fillText("is an AI development focused board game",180,275)
+    ctx.fillText("for two players",125,325)
+    ctx.fillText("In this HTML5 version you can have a feel", 125,400)
+    ctx.fillText("for the game and its strategies on any device", 125,450)
+    ctx.fillText("before you download the desktop version", 125,500)
+    ctx.fillText("Let's look at the pieces first", 125,575)
+
+  }
+  if(tutorial_page==1)
+  {
+    draw_aon(1,2,"w");
+    draw_aon(1,3,"b");
+    ctx.textAlign="center"
+    ctx.font="bold 40px quizma-light";
+    ctx.fillText("Aon",250,300)
+    ctx.textAlign="start"
+    ctx.font="35px quizma-light";
+    ctx.fillText("They move to an adjacent square",375,500)
+
+  }
+  if(tutorial_page==2)
+  {
+    draw_khoyor(1,2,"w");
+    draw_khoyor(1,3,"b");
+    ctx.textAlign="center"
+    ctx.font="bold 40px quizma-light";
+    ctx.fillText("Khoyor",250,300)
+    ctx.textAlign="start"
+    ctx.font="35px quizma-light";
+    ctx.fillText("They move two squares on any",375,500)
+    ctx.fillText("direction",375,550)
+
+  }
+  if(tutorial_page==3)
+  {
+    draw_ska(1,2,"w");
+    draw_ska(1,3,"b");
+    ctx.textAlign="center"
+    ctx.font="bold 40px quizma-light";
+    ctx.fillText("Ska",250,300)
+    ctx.textAlign="start"
+    ctx.font="35px quizma-light";
+    ctx.fillText("They move one square diagonally",375,500)
+
+  }
+  if(tutorial_page==4)
+  {
+    draw_san(1,2,"w");
+    draw_san(1,3,"b");
+    ctx.textAlign="center"
+    ctx.font="bold 40px quizma-light";
+    ctx.fillText("San",250,300)
+    ctx.textAlign="start"
+    ctx.font="35px quizma-light";
+    ctx.fillText("They move one square forward",375,500)
+
+  }
+  if(tutorial_page==5)
+  {
+    ctx.textAlign="start"
+    ctx.font="60px quizma-light";
+    ctx.fillText("Rules", 125,275);
+    ctx.font="35px quizma-light";
+    ctx.fillText("- Black moves first, then players alternate",125,350)
+    ctx.fillText("- On a turn, the player can either:",125,400)
+    ctx.fillText("Move a piece",200,450)
+    ctx.fillText("Spawn a san in their home row if its empty",200,500)
+    ctx.fillText("-A piece can be captured by moving to its position",125,550)
+  }
+  if(tutorial_page==6)
+  {
+    ctx.textAlign="start"
+    ctx.font="60px quizma-light";
+    ctx.fillText("Win conditions", 125,275);
+    ctx.font="35px quizma-light";
+    ctx.fillText("A player wins when",125,350)
+    ctx.fillText("They place a san on the opponent's home row",200,400)
+    ctx.fillText("They take their opponent's last piece",200,450)
+  }
+  if(tutorial_page>6)
+  {
+    ctx.textAlign="start"
+    ctx.font="60px quizma-light";
+    ctx.fillText("Desktop Xi", 125,275);
+    ctx.font="35px quizma-light";
+    ctx.fillText("If you want to develop your own AI, play",125,350)
+    ctx.fillText("and test your AIs online and get statistics",125,400)
+    ctx.fillText("on their performance, you'll need to download", 125,450)
+    ctx.fillText("the desktop version, available", 125,500)
+    ctx.fillText("Have fun, and thanks for playing", 125,600)
+    ctx.fillStyle="rgba(255,255,255,"+(30/menu_alpha(500))+")";
+    ctx.fillText("here",570,500)
+  }
+
+
+  if (anistep<30){anistep++}
+}
+
 function main_loop()
 {
   //initial fade, done manually
@@ -379,7 +506,7 @@ function update_click_coords()
 
 function main_menu_listener()
 {  
-  valid_options=[1,2,5,6]
+  valid_options=[1,2,3,5,6]
 
   if (valid_options.includes(menu_option))
   {
@@ -400,6 +527,11 @@ function main_menu_listener()
     ai=1
     ctx.canvas.addEventListener("click", main_game_listener, false);
     ani=setInterval(main_loop, interval, false);
+  }
+    if (menu_option==3){
+    au.play("menu_select")
+    ctx.canvas.addEventListener("click", tutorial_listener, false);
+    ani=setInterval(tutorial, interval, false);
   }
   if (menu_option==5)
   {
@@ -480,6 +612,28 @@ function credits_menu_listener()
       skip_to_menu(1,1)
     }
   }
+}
+
+function tutorial_listener()
+{
+  if(tutorial_page<8)
+  {
+    tutorial_page+=1;
+  }
+  if(tutorial_page>=8)
+  {
+    if(mouse_pos.y>450 && mouse_pos.y<550){
+      window.open('https://github.com/achifaifa/xi')
+    }
+    else
+    {
+      ctx.canvas.removeEventListener("click", tutorial_listener);
+      skip_to_menu();
+      tutorial_page=0
+      return 1
+    }
+  }
+  au.play("menu_option")
 }
 
 function main_game_listener()
@@ -645,6 +799,7 @@ function draw_ska(x,y,colour)
     ctx.lineWidth=dot_size*2;
     draw_line(pxx-ddiff,pxy-ddiff,pxx+ddiff,pxy+ddiff, "white");
   }
+  ctx.lineWidth=1
 }
 
 function draw_san(x,y,colour)
@@ -788,7 +943,7 @@ function move(mov)
 
 function spawn(coords, c)
 {
-  board[coords.y][coords.x]=c+"z"
+  board[coords.y][coords.x]=c+"z";
 }
 
 function ai_move()
