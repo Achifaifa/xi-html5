@@ -103,6 +103,7 @@ function draw_line(x1,y1,x2,y2,colour="white",alpha=1)
 
 function draw_circle(x,y,size,colour="white",alpha=1)
 {
+  ctx.lineWidth=1;
   pa=ctx.globalAlpha;
   if (colour!="black"){ctx.globalAlpha=alpha;}
   ctx.strokeStyle=colour;
@@ -110,7 +111,6 @@ function draw_circle(x,y,size,colour="white",alpha=1)
   ctx.arc(x, y, size, 0, 2*Math.PI, true);
   ctx.stroke();
   ctx.globalAlpha=pa;
-  ctx.lineWidth=1;
 }
 
 function fill_circle(x,y,size,colour="white",alpha=1)
@@ -510,7 +510,7 @@ function main_game_listener()
     prev={x:-1, y:-1}
   }
 
-  if (ai==1 && turn==1)
+  if (ai==1 && turn==1 && check_game()==0)
   {
     ai_move()
     turn^=1
