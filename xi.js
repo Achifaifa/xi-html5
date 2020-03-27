@@ -22,6 +22,9 @@ grid=0
 grid_types=["cross", "dot", "none"]
 flip=0
 flip_types=["adjacent", "opposed"]
+difficulty=0
+difficulty_types=["easy","easier","easiest"]
+ai=0
 
 //
 
@@ -107,6 +110,7 @@ function draw_circle(x,y,size,colour="white",alpha=1)
   ctx.arc(x, y, size, 0, 2*Math.PI, true);
   ctx.stroke();
   ctx.globalAlpha=pa;
+  ctx.lineWidth=1;
 }
 
 function fill_circle(x,y,size,colour="white",alpha=1)
@@ -182,8 +186,10 @@ function title_animation(i)
 
 function menu()
 {
+  ctx.canvas.removeEventListener("click", skip_to_menu);
   ctx.clearRect(0,0,1000,1000)
   malpha=anistep/30;
+  ctx.lineWidth=1;
   draw_line(80,120,80,880, "white", malpha);
   draw_line(80,120,100,120, "white", malpha);
 
@@ -195,12 +201,15 @@ function menu()
   ctx.font="20px quizma-light";
   ctx.fillText(version,210,160);
   ctx.font="bold 50px quizma-light";
-  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(210))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(200))+")";
   ctx.fillText("New game",150,260);
-  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(610))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(300))+")";
+  ctx.fillText("Play vs AI",150,360);
+  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(600))+")";
   ctx.fillText("Settings",150,660);
-  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(710))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*malpha/menu_alpha(700))+")";
   ctx.fillText("Credits",150,760);
+
   if (anistep<30){anistep++;} 
 }
 
@@ -222,19 +231,21 @@ function credits()
   ctx.fillText("Credits",300,145);
   ctx.font="20px quizma-light";
   ctx.fillText(version,210,160);
+
   ctx.font="bold 50px quizma-light";
   ctx.fillText("Code",150,260);
   ctx.fillText("SFX",150,360);
   ctx.fillText("Font",150,460);
-  ctx.font="45px quizma-light";
-  ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(210))+")";
-  ctx.fillText("Achifaifa",350,260);
-  ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(310))+")";
-  ctx.fillText("broumbroum",350,360);
-  ctx.fillStyle="rgba(255,255,255,"+(50*calpha/menu_alpha(410))+")";
-  ctx.fillText("Studio Typo",350,460);
-  ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(710))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(700))+")";
   ctx.fillText("Back",150,760);
+
+  ctx.font="45px quizma-light";
+  ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(200))+")";
+  ctx.fillText("Achifaifa",350,260);
+  ctx.fillStyle="rgba(255,255,255,"+(30*calpha/menu_alpha(300))+")";
+  ctx.fillText("broumbroum",350,360);
+  ctx.fillStyle="rgba(255,255,255,"+(50*calpha/menu_alpha(400))+")";
+  ctx.fillText("Studio Typo",350,460);
 
   if (anistep<30){anistep++}
 }
@@ -259,14 +270,18 @@ function settings()
   ctx.fillText(version,210,160);
   ctx.font="bold 50px quizma-light";
 
-  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(210))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(200))+")";
   ctx.fillText("Grid",150,260);
-  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(310))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(300))+")";
   ctx.fillText("Players",150,360);
-  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(410))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(400))+")";
   ctx.fillText("SFX",150,460);
-  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(410))+")";
+  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(500))+")";
   ctx.fillText("Music",150,560);
+  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(600))+")";
+  ctx.fillText("AI",150,660);
+  ctx.fillStyle="rgba(255,255,255,"+(30*salpha/menu_alpha(700))+")";
+  ctx.fillText("Back",150,760);
 
   ctx.font="45px quizma-light";
   ctx.fillStyle="rgba(255,255,255,"+salpha+")";
@@ -274,8 +289,8 @@ function settings()
   ctx.fillText(flip_types[flip],350,360);
   ctx.fillText(sfx_types[sfx],350,460);
   ctx.fillText(music_types[music],350,560);
+  ctx.fillText(difficulty_types[difficulty],350,660);
 
-  ctx.fillStyle="rgba(255,255,255,"+salpha+")";  ctx.fillText("Back",150,760);
   if (anistep<30){anistep++;}
 }
 
@@ -331,11 +346,13 @@ function main_loop()
 
 //Listeners
 
-function skip_to_menu()
+
+function skip_to_menu(e,mute=0)
 {
-  au.play("menu_select")
+  if (mute==0){au.play("menu_select")}
   clearTimeout(ani);
   anistep=1
+  ai=0
   ctx.canvas.addEventListener("click", main_menu_listener, false);
   ani=setInterval(menu, interval, 1)
   ctx.canvas.removeEventListener("click", skip_to_menu);
@@ -362,8 +379,8 @@ function update_click_coords()
 
 function main_menu_listener()
 {  
+  valid_options=[1,2,5,6]
 
-  valid_options=[1,5,6]
   if (valid_options.includes(menu_option))
   {
     ctx.canvas.removeEventListener("click", main_menu_listener, false);
@@ -374,6 +391,13 @@ function main_menu_listener()
   {
     au.play("menu_select")
     initialize_board();
+    ctx.canvas.addEventListener("click", main_game_listener, false);
+    ani=setInterval(main_loop, interval, false);
+  }
+  if (menu_option==2){
+    au.play("menu_select")
+    initialize_board();
+    ai=1
     ctx.canvas.addEventListener("click", main_game_listener, false);
     ani=setInterval(main_loop, interval, false);
   }
@@ -393,7 +417,7 @@ function main_menu_listener()
 
 function settings_menu_listener()
 {
-  valid_options=[1,2,3,4,6]
+  valid_options=[1,2,3,4,5,6]
   if (valid_options.includes(menu_option))
   {
     if (menu_option==1)
@@ -416,14 +440,16 @@ function settings_menu_listener()
       au.play("menu_option")
       music=(music+1)%music_types.length
     }
+    if (menu_option==5)
+    {
+      au.play("menu_option")
+      difficulty=(difficulty+1)%difficulty_types.length
+    }
     else if (menu_option==6)
     {
       au.play("menu_back")
       ctx.canvas.removeEventListener("click", settings_menu_listener, false);
-      ctx.canvas.addEventListener("click", main_menu_listener, false);
-      anistep=1;
-      clearTimeout(ani);
-      ani=setInterval(menu, interval, 1);
+      skip_to_menu(1,1)
     } 
   }
 }
@@ -450,11 +476,8 @@ function credits_menu_listener()
     if (menu_option==6)
     {
       au.play("menu_back")
-      ctx.canvas.addEventListener("click", main_menu_listener, false);
       ctx.canvas.removeEventListener("click", credits_menu_listener, false);
-      anistep=1;
-      clearTimeout(ani);
-      ani=setInterval(menu, interval, 1);
+      skip_to_menu(1,1)
     }
   }
 }
@@ -486,6 +509,12 @@ function main_game_listener()
   {
     selected={x:-1, y:-1}
     prev={x:-1, y:-1}
+  }
+
+  if (ai==1 && turn==1)
+  {
+    ai_move()
+    turn^=1
   }
 
   if (check_game()!=0)
@@ -595,6 +624,7 @@ function draw_khoyor(x,y,colour)
     fill_circle(pxx-ddiff,pxy-ddiff, dot_size, "white");
     fill_circle(pxx+ddiff,pxy+ddiff, dot_size, "white"); 
   }
+  ctx.lineWidth=1;
 }
 
 function draw_ska(x,y,colour)
@@ -681,9 +711,8 @@ function check_game()
   return 0
 }
 
-function possible_moves(coords)
+function possible_moves(c)
 {
-  c={x:Number.parseFloat(coords.x), y:Number.parseFloat(coords.y)}
   piece=board[c.y][c.x]
   pc=piece[0]
   pt=piece[1]
@@ -762,8 +791,94 @@ function spawn(coords, c)
   board[coords.y][coords.x]=c+"z"
 }
 
-//Always-on listeners
+function ai_move()
+{
+  aipieces=[]
+  for(i=0; i<6; i++)
+  {
+    for(j=0; j<6; j++)
+    {
+      it=board[j][i]
+      if(it!="")
+      {
+        if(it[0]=="w")
+        {
+          aipieces.push({x:i, y:j})
+        }
+      }
+    }
+  }
 
+  if (difficulty==0)
+  {
+    //Take pieces if possible
+    for(k=0; k<aipieces.length; k++)
+    {
+      taimoves=possible_moves(aipieces[k])
+      for(j=0; j<taimoves.length; j++)
+      {
+        it=taimoves[j]
+        if(board[it.y][it.x]!="")
+        {
+          if(board[it.y][it.x][0]=="b")
+          {
+            move([aipieces[k],it])
+            return 1
+          }
+        }
+      }
+    }
+    //move pieces in homerow
+    aipieceshr=aipieces.filter(a=>a.y==0)
+    if (aipieceshr.length>0 && aipieceshr.filter(a=>possible_moves(a).length>0).length>0)
+    {
+      while(1==1)
+      {
+        it=aipieceshr[parseInt(Math.random()*aipieceshr.length)]
+        pm=possible_moves(it)
+        if(pm.length>0)
+        {
+          move([it,pm[parseInt(Math.random()*pm.length)]])
+          return 1
+        }
+      }
+    } 
+  }
+  if (difficulty<=1)
+  {
+    //Spawn if homerown is empty
+    if(homerow("w").filter(a=>a!="").length==0)
+    {
+      spawn({x: parseInt(Math.random()*5), y:0},"w")
+      return 1
+    }
+    //Move sans first
+    for (k=0; k<aipieces.length; k++)
+    {
+      it=aipieces[k]
+      if(board[it.y][it.x][1]=="z")
+      {
+        if(possible_moves(it).length>0)
+        {
+          move([it,possible_moves(it)[0]])
+          return 1
+        }
+      }
+    } 
+  }
+  while(1==1)
+  {
+    cpiece=aipieces[parseInt(Math.random()*aipieces.length)]
+    cpmoves=possible_moves(cpiece)
+    if(cpmoves.length>0)
+    {
+      move([cpiece,cpmoves[parseInt(Math.random()*cpmoves.length)]])
+      return 1
+    }
+  }
+}
+
+//Always-on listeners
 
 ctx.canvas.addEventListener("click", update_menu_option);
 ctx.canvas.addEventListener('mousemove', function(e){
@@ -772,11 +887,6 @@ ctx.canvas.addEventListener('mousemove', function(e){
 
 //Main listener
 
-ctx.canvas.addEventListener("click", skip_to_menu, false);
+ctx.canvas.addEventListener("click", skip_to_menu);
 loader()
 ani=setInterval(logo_animation, interval, 1);
-
-//Testing 
-// initialize_board()
-// board[0][0]="bz"
-// ani=setInterval(results, interval);
