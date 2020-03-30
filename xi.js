@@ -641,12 +641,14 @@ function main_game_listener()
   update_click_coords();
   clicked_piece=board[click_coords.y][click_coords.x]
 
+  //Clicked on a valid move
   if (prev.x!=-1 && possible_moves(prev).filter(e=>e.x==click_coords.x && e.y==click_coords.y).length>0)
   {
     move([prev,click_coords])
     selected={x:-1, y:-1}
     turn^=1
   }
+  //Clicked on a new piece
   else if ((clicked_piece[0]=="w" && turn==1) || (clicked_piece[0]=="b" && turn==0))
   {
     prev.x=click_coords.x;
@@ -654,8 +656,10 @@ function main_game_listener()
     selected.x=click_coords.x;
     selected.y=click_coords.y;
   }  
+  //Clicked for sawn spawn
   else if ((click_coords.y==0 && turn==1 && homerow("w").every(e=>e=="")) || (click_coords.y==5 && turn==0 && homerow("b").every(e=>e=="")))
   {
+    selected={x:-1, y:-1}
     spawn(click_coords, ["b","w"][turn])
     turn^=1
   }
