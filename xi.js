@@ -149,7 +149,7 @@ function coord_to_pixel(c)
 
 function menu_alpha(y)
 {
-  if (mobile==0){return Math.abs(y-mouse_pos.y)}
+  if (mobile==0){return Math.abs(y-mouse_pos.y+50)}
   else {return 50}
 }
 
